@@ -15,7 +15,7 @@ def main() -> None:
         print(LOGO)
         print("Select a version:")
         print("  1 — Original  (course build, procedural)")
-        print("  2 — Advanced  (OOP rebuild, persistent high score)")
+        print("  2 — Advanced  (OOP rebuild, pause + manual serve mode)")
         print("  q — Quit")
         choice = input("\nEnter choice: ").strip().lower()
 

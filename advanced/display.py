@@ -169,7 +169,7 @@ class Display:
 
         self._writer.goto(0, -30)
         self._writer.write(
-            "[ SPACE ]  resume        [ Q ]  quit",
+            "[ SPACE ]  resume        [ R ]  return to menu",
             align="center",
             font=("Courier", 16, "normal"),
         )
@@ -181,11 +181,11 @@ class Display:
         def _on_space() -> None:
             _choice["value"] = True
 
-        def _on_q() -> None:
+        def _on_r() -> None:
             _choice["value"] = False
 
         self.screen.onkeypress(_on_space, "space")
-        self.screen.onkeypress(_on_q, "q")
+        self.screen.onkeypress(_on_r, "r")
         self.screen.listen()
 
         while _choice["value"] is None:
@@ -194,7 +194,7 @@ class Display:
 
         self._writer.clear()
         self.screen.onkeypress(None, "space")
-        self.screen.onkeypress(None, "q")
+        self.screen.onkeypress(None, "r")
 
         return bool(_choice["value"])
 
@@ -202,31 +202,42 @@ class Display:
     # Manual-mode serve prompt
     # ------------------------------------------------------------------
 
-    def wait_for_serve(self) -> None:
-        """Show 'Space to serve' prompt and block until Space is pressed."""
+    def wait_for_serve(self) -> bool:
+        """Show 'Space to serve' prompt and block until Space or R is pressed.
+
+        Returns True  → serve (continue playing).
+        Returns False → return to menu.
+        """
         self._writer.goto(0, -200)
         self._writer.color("white")
         self._writer.write(
-            "[ SPACE ]  to serve",
+            "[ SPACE ]  to serve        [ R ]  return to menu",
             align="center",
             font=("Courier", 16, "normal"),
         )
         self.screen.update()
 
-        _pressed: dict[str, bool] = {"space": False}
+        _choice: dict[str, bool | None] = {"value": None}
 
         def _on_space() -> None:
-            _pressed["space"] = True
+            _choice["value"] = True
+
+        def _on_r() -> None:
+            _choice["value"] = False
 
         self.screen.onkeypress(_on_space, "space")
+        self.screen.onkeypress(_on_r, "r")
         self.screen.listen()
 
-        while not _pressed["space"]:
+        while _choice["value"] is None:
             time.sleep(0.05)
             self.screen.update()
 
         self._writer.clear()
         self.screen.onkeypress(None, "space")
+        self.screen.onkeypress(None, "r")
+
+        return bool(_choice["value"])
 
     # ------------------------------------------------------------------
     # Game-over overlay

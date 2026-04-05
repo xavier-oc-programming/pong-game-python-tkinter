@@ -141,7 +141,9 @@ def main() -> None:
             else:
                 # manual mode — yield Space to serve prompt then reclaim for pause
                 display.screen.onkeypress(None, "space")
-                display.wait_for_serve()
+                if not display.wait_for_serve():
+                    display.close()
+                    return
                 display.screen.onkeypress(trigger_pause, "space")
                 display.screen.listen()
 
