@@ -108,10 +108,10 @@ class Display:
         self._writer.write(score[1], align="center", font=("Courier", SCORE_FONT_SIZE, "bold"))
 
     # ------------------------------------------------------------------
-    # Welcome screen — returns "auto" or "manual"
+    # Welcome / title screen — returns "auto", "manual", or None (quit)
     # ------------------------------------------------------------------
 
-    def show_welcome(self) -> str:
+    def show_welcome(self) -> str | None:
         self._ball.hideturtle()
         self._paddle_a.hideturtle()
         self._paddle_b.hideturtle()
@@ -129,9 +129,11 @@ class Display:
             ("  Move down:  \u2193",   16, "normal",  -90),
             ("",                        0, "normal", -115),
             ("[ SPACE ]  pause anytime", 14, "normal", -135),
-            ("",                        0, "normal", -160),
-            ("Next point starts:",      16, "normal", -178),
-            ("[ A ]  auto     [ M ]  manual (Space to serve)", 15, "bold", -210),
+            ("",                        0, "normal", -155),
+            ("Next point starts:",      16, "normal", -173),
+            ("[ A ]  auto     [ M ]  manual (Space to serve)", 15, "bold", -200),
+            ("",                        0, "normal", -225),
+            ("[ Q ]  quit",            14, "normal", -245),
         ]
 
         for text, size, style, y in lines:
@@ -143,23 +145,28 @@ class Display:
 
         _choice: dict[str, str | None] = {"value": None}
 
-        def _on_a() -> None:
-            _choice["value"] = "auto"
-
-        def _on_m() -> None:
-            _choice["value"] = "manual"
+        def _on_a() -> None:    _choice["value"] = "auto"
+        def _on_m() -> None:    _choice["value"] = "manual"
+        def _on_q() -> None:    _choice["value"] = "quit"
 
         self.screen.onkeypress(_on_a, "a")
         self.screen.onkeypress(_on_m, "m")
+        self.screen.onkeypress(_on_q, "q")
         self.screen.listen()
 
         while _choice["value"] is None:
             time.sleep(0.05)
             self.screen.update()
 
-        self._writer.clear()
         self.screen.onkeypress(None, "a")
         self.screen.onkeypress(None, "m")
+        self.screen.onkeypress(None, "q")
+
+        if _choice["value"] == "quit":
+            self._writer.clear()
+            return None
+
+        self._writer.clear()
         self._ball.showturtle()
         self._paddle_a.showturtle()
         self._paddle_b.showturtle()

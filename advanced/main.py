@@ -33,7 +33,10 @@ def main() -> None:
     display.render_score(tracker.score)
     display.screen.update()
 
-    mode: str = display.show_welcome()  # "auto" or "manual"
+    mode = display.show_welcome()  # "auto", "manual", or None (quit)
+    if mode is None:
+        display.close()
+        return
 
     # ------------------------------------------------------------------
     # Key state — track hold, not single press
