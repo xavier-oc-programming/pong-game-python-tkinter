@@ -82,42 +82,39 @@ class Display:
         else:
             self._paddle_b.goto(x, y)
 
-    def render_score(self, score: tuple[int, int], high_score: int) -> None:
+    def render_score(self, score: tuple[int, int]) -> None:
         self._writer.clear()
         self._writer.color("white")
         self._writer.goto(-100, 200)
         self._writer.write(score[0], align="center", font=("Courier", 80, "normal"))
         self._writer.goto(100, 200)
         self._writer.write(score[1], align="center", font=("Courier", 80, "normal"))
-        self._writer.goto(0, -270)
-        self._writer.write(
-            f"HIGH: {high_score}",
-            align="center",
-            font=("Courier", 14, "normal"),
-        )
 
     # ------------------------------------------------------------------
-    # Welcome screen
+    # Welcome screen — returns "auto" or "manual"
     # ------------------------------------------------------------------
 
-    def show_welcome(self) -> None:
+    def show_welcome(self) -> str:
         self._ball.hideturtle()
         self._paddle_a.hideturtle()
         self._paddle_b.hideturtle()
 
         lines: list[tuple[str, int, str, int]] = [
             # (text, font_size, style, y_position)
-            ("P O N G",          48, "bold",   120),
-            ("",                  0,  "normal",  60),
-            ("Left Player",      18, "normal",  10),
-            ("  Move up:    W",  16, "normal", -20),
-            ("  Move down:  S",  16, "normal", -50),
-            ("",                  0,  "normal", -80),
-            ("Right Player",     18, "normal", -110),
-            ("  Move up:    \u2191",  16, "normal", -140),
-            ("  Move down:  \u2193",  16, "normal", -170),
-            ("",                  0,  "normal", -200),
-            ("[ SPACE ]  to start", 18, "bold", -230),
+            ("P O N G",               48, "bold",    140),
+            ("",                        0, "normal",   90),
+            ("Left Player",            18, "normal",   60),
+            ("  Move up:    W",        16, "normal",   35),
+            ("  Move down:  S",        16, "normal",   10),
+            ("",                        0, "normal",  -15),
+            ("Right Player",           18, "normal",  -40),
+            ("  Move up:    \u2191",   16, "normal",  -65),
+            ("  Move down:  \u2193",   16, "normal",  -90),
+            ("",                        0, "normal", -115),
+            ("[ SPACE ]  pause anytime", 14, "normal", -135),
+            ("",                        0, "normal", -160),
+            ("Next point starts:",      16, "normal", -178),
+            ("[ A ]  auto     [ M ]  manual (Space to serve)", 15, "bold", -210),
         ]
 
         for text, size, style, y in lines:
@@ -127,12 +124,101 @@ class Display:
             time.sleep(WELCOME_LINE_DELAY)
             self.screen.update()
 
+        _choice: dict[str, str | None] = {"value": None}
+
+        def _on_a() -> None:
+            _choice["value"] = "auto"
+
+        def _on_m() -> None:
+            _choice["value"] = "manual"
+
+        self.screen.onkeypress(_on_a, "a")
+        self.screen.onkeypress(_on_m, "m")
+        self.screen.listen()
+
+        while _choice["value"] is None:
+            time.sleep(0.05)
+            self.screen.update()
+
+        self._writer.clear()
+        self.screen.onkeypress(None, "a")
+        self.screen.onkeypress(None, "m")
+        self._ball.showturtle()
+        self._paddle_a.showturtle()
+        self._paddle_b.showturtle()
+
+        return _choice["value"]
+
+    # ------------------------------------------------------------------
+    # Pause overlay
+    # ------------------------------------------------------------------
+
+    def show_pause(self) -> bool:
+        """Overlay PAUSED on the frozen game state.
+
+        Returns True  → resume.
+        Returns False → quit.
+        """
+        self._writer.goto(0, 30)
+        self._writer.color("white")
+        self._writer.write(
+            "PAUSED",
+            align="center",
+            font=("Courier", 50, "bold"),
+        )
+
+        self._writer.goto(0, -30)
+        self._writer.write(
+            "[ SPACE ]  resume        [ Q ]  quit",
+            align="center",
+            font=("Courier", 16, "normal"),
+        )
+
+        self.screen.update()
+
+        _choice: dict[str, bool | None] = {"value": None}
+
+        def _on_space() -> None:
+            _choice["value"] = True
+
+        def _on_q() -> None:
+            _choice["value"] = False
+
+        self.screen.onkeypress(_on_space, "space")
+        self.screen.onkeypress(_on_q, "q")
+        self.screen.listen()
+
+        while _choice["value"] is None:
+            time.sleep(0.05)
+            self.screen.update()
+
+        self._writer.clear()
+        self.screen.onkeypress(None, "space")
+        self.screen.onkeypress(None, "q")
+
+        return bool(_choice["value"])
+
+    # ------------------------------------------------------------------
+    # Manual-mode serve prompt
+    # ------------------------------------------------------------------
+
+    def wait_for_serve(self) -> None:
+        """Show 'Space to serve' prompt and block until Space is pressed."""
+        self._writer.goto(0, -200)
+        self._writer.color("white")
+        self._writer.write(
+            "[ SPACE ]  to serve",
+            align="center",
+            font=("Courier", 16, "normal"),
+        )
+        self.screen.update()
+
         _pressed: dict[str, bool] = {"space": False}
 
         def _on_space() -> None:
             _pressed["space"] = True
 
-        self.screen.onkey(_on_space, "space")
+        self.screen.onkeypress(_on_space, "space")
         self.screen.listen()
 
         while not _pressed["space"]:
@@ -140,10 +226,7 @@ class Display:
             self.screen.update()
 
         self._writer.clear()
-        self._ball.showturtle()
-        self._paddle_a.showturtle()
-        self._paddle_b.showturtle()
-        self.screen.onkey(None, "space")
+        self.screen.onkeypress(None, "space")
 
     # ------------------------------------------------------------------
     # Game-over overlay
@@ -152,8 +235,8 @@ class Display:
     def show_game_over(self) -> bool:
         """Overlay GAME OVER on the frozen game state.
 
-        Returns True  → player wants to play again.
-        Returns False → player wants to quit.
+        Returns True  → play again.
+        Returns False → quit.
         """
         self._writer.goto(0, 50)
         self._writer.color("red")
@@ -181,8 +264,8 @@ class Display:
         def _on_q() -> None:
             _choice["value"] = False
 
-        self.screen.onkey(_on_space, "space")
-        self.screen.onkey(_on_q, "q")
+        self.screen.onkeypress(_on_space, "space")
+        self.screen.onkeypress(_on_q, "q")
         self.screen.listen()
 
         while _choice["value"] is None:
@@ -190,8 +273,8 @@ class Display:
             self.screen.update()
 
         self._writer.clear()
-        self.screen.onkey(None, "space")
-        self.screen.onkey(None, "q")
+        self.screen.onkeypress(None, "space")
+        self.screen.onkeypress(None, "q")
 
         return bool(_choice["value"])
 
