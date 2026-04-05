@@ -2,7 +2,10 @@
 # Screen
 # ---------------------------------------------------------------------------
 SCREEN_WIDTH: int = 800
-SCREEN_HEIGHT: int = 600
+SCREEN_HEIGHT: int = 760          # court (600) + 80px score strip above + 80px padding below
+SCORE_DIVIDER_Y: int = 285        # horizontal line separating score strip from court
+SCORE_Y: int = 318                # y-position of score numerals inside the strip
+SCORE_FONT_SIZE: int = 40         # font size for HUD scores (was 80, court-embedded)
 SCREEN_BG: str = "black"
 SCREEN_TITLE: str = "Pong"
 

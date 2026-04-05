@@ -9,6 +9,9 @@ from config import (
     PADDLE_STRETCH_LEN,
     PADDLE_STRETCH_WID,
     WELCOME_LINE_DELAY,
+    SCORE_DIVIDER_Y,
+    SCORE_Y,
+    SCORE_FONT_SIZE,
 )
 
 
@@ -27,6 +30,7 @@ class Display:
         self._ball: Turtle = self._make_ball()
         self._writer: Turtle = self._make_writer()
 
+        self._draw_score_divider()
         self._draw_center_line()
 
     # ------------------------------------------------------------------
@@ -55,15 +59,27 @@ class Display:
         t.color("white")
         return t
 
+    def _draw_score_divider(self) -> None:
+        """Horizontal line separating the score strip from the court."""
+        div = Turtle()
+        div.hideturtle()
+        div.penup()
+        div.color("white")
+        div.goto(-SCREEN_WIDTH // 2, SCORE_DIVIDER_Y)
+        div.pendown()
+        div.goto(SCREEN_WIDTH // 2, SCORE_DIVIDER_Y)
+
     def _draw_center_line(self) -> None:
+        """Vertical dashed line down the centre of the court only."""
+        court_px = SCORE_DIVIDER_Y + SCREEN_HEIGHT // 2  # pixels from divider to bottom
         line = Turtle()
         line.hideturtle()
         line.penup()
         line.color("white")
-        line.goto(0, SCREEN_HEIGHT // 2)
+        line.goto(0, SCORE_DIVIDER_Y)
         line.setheading(270)
         line.pendown()
-        for _ in range(SCREEN_HEIGHT // 20):
+        for _ in range(court_px // 20):
             line.forward(10)
             line.penup()
             line.forward(10)
@@ -85,10 +101,10 @@ class Display:
     def render_score(self, score: tuple[int, int]) -> None:
         self._writer.clear()
         self._writer.color("white")
-        self._writer.goto(-100, 200)
-        self._writer.write(score[0], align="center", font=("Courier", 80, "normal"))
-        self._writer.goto(100, 200)
-        self._writer.write(score[1], align="center", font=("Courier", 80, "normal"))
+        self._writer.goto(-120, SCORE_Y)
+        self._writer.write(score[0], align="center", font=("Courier", SCORE_FONT_SIZE, "bold"))
+        self._writer.goto(120, SCORE_Y)
+        self._writer.write(score[1], align="center", font=("Courier", SCORE_FONT_SIZE, "bold"))
 
     # ------------------------------------------------------------------
     # Welcome screen — returns "auto" or "manual"
