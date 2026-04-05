@@ -186,7 +186,7 @@ class Display:
 
         self._writer.goto(0, -30)
         self._writer.write(
-            "[ SPACE ]  resume        [ R ]  return to menu",
+            "[ SPACE ]  resume        [ R ]  return to title screen",
             align="center",
             font=("Courier", 16, "normal"),
         )
@@ -223,12 +223,12 @@ class Display:
         """Show 'Space to serve' prompt and block until Space or R is pressed.
 
         Returns True  → serve (continue playing).
-        Returns False → return to menu.
+        Returns False → return to title screen.
         """
         self._writer.goto(0, -200)
         self._writer.color("white")
         self._writer.write(
-            "[ SPACE ]  to serve        [ R ]  return to menu",
+            "[ SPACE ]  to serve        [ R ]  return to title screen",
             align="center",
             font=("Courier", 16, "normal"),
         )
@@ -277,7 +277,7 @@ class Display:
         self._writer.goto(0, -30)
         self._writer.color("white")
         self._writer.write(
-            "[ SPACE ]  play again        [ Q ]  quit",
+            "[ SPACE ]  play again        [ R ]  return to title screen",
             align="center",
             font=("Courier", 16, "normal"),
         )
@@ -289,11 +289,11 @@ class Display:
         def _on_space() -> None:
             _choice["value"] = True
 
-        def _on_q() -> None:
+        def _on_r() -> None:
             _choice["value"] = False
 
         self.screen.onkeypress(_on_space, "space")
-        self.screen.onkeypress(_on_q, "q")
+        self.screen.onkeypress(_on_r, "r")
         self.screen.listen()
 
         while _choice["value"] is None:
@@ -302,7 +302,7 @@ class Display:
 
         self._writer.clear()
         self.screen.onkeypress(None, "space")
-        self.screen.onkeypress(None, "q")
+        self.screen.onkeypress(None, "r")
 
         return bool(_choice["value"])
 
