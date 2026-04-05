@@ -1,3 +1,4 @@
+import sys
 import time
 from turtle import Screen, Turtle
 
@@ -318,4 +319,4 @@ class Display:
     # ------------------------------------------------------------------
 
     def close(self) -> None:
-        self.screen.bye()
+        sys.exit(0)

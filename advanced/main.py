@@ -36,7 +36,6 @@ def main() -> None:
     mode = display.show_welcome()  # "auto", "manual", or None (quit)
     if mode is None:
         display.close()
-        return
 
     # ------------------------------------------------------------------
     # Key state — track hold, not single press
@@ -79,7 +78,6 @@ def main() -> None:
             display.screen.onkeypress(None, "space")  # yield Space to pause overlay
             if not display.show_pause():
                 display.close()
-                return
             display.screen.onkeypress(trigger_pause, "space")
             display.screen.listen()
 
@@ -128,7 +126,6 @@ def main() -> None:
                 display.render_score(tracker.score)  # update BEFORE overlay
                 if not display.show_game_over():
                     display.close()
-                    return                    # subprocess ends cleanly → menu reappears
                 state.reset()
                 # re-render all objects before resuming loop
                 display.render_ball(state.ball.x, state.ball.y)
@@ -146,7 +143,6 @@ def main() -> None:
                 display.screen.onkeypress(None, "space")
                 if not display.wait_for_serve():
                     display.close()
-                    return
                 display.screen.onkeypress(trigger_pause, "space")
                 display.screen.listen()
 
