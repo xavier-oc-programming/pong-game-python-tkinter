@@ -44,19 +44,19 @@ The terminal menu appears. Press `1` for the original build or `2` for the advan
 
 ## Builds
 
-| | Original | Advanced |
-|---|---|---|
-| **Style** | Procedural | OOP — separated by responsibility |
-| **Magic numbers** | In-file | Centralised in `config.py` |
-| **Score display** | Inside the court (large overlay) | Persistent HUD strip above court |
-| **Court boundary** | None visible | Top and bottom lines |
-| **Pause** | No | Yes — `Space` at any time |
-| **Serve mode** | Auto only | Auto or manual (`Space` to serve) |
-| **Title screen** | No | Animated line-by-line reveal |
-| **Game-over screen** | Clears court | Overlaid on frozen game state |
-| **In-window navigation** | No | `R` returns to title screen without closing |
-| **Quit** | Close window | `Q` on title screen |
-| **Type hints** | No | Throughout |
+|                          | Original                         | Advanced                                    |
+| ------------------------ | -------------------------------- | ------------------------------------------- |
+| **Style**                | Procedural                       | OOP — separated by responsibility           |
+| **Magic numbers**        | In-file                          | Centralised in `config.py`                  |
+| **Score display**        | Inside the court (large overlay) | Persistent HUD strip above court            |
+| **Court boundary**       | None visible                     | Top and bottom lines                        |
+| **Pause**                | No                               | Yes — `Space` at any time                   |
+| **Serve mode**           | Auto only                        | Auto or manual (`Space` to serve)           |
+| **Title screen**         | No                               | Animated line-by-line reveal                |
+| **Game-over screen**     | Clears court                     | Overlaid on frozen game state               |
+| **In-window navigation** | No                               | `R` returns to title screen without closing |
+| **Quit**                 | Close window                     | `Q` on title screen                         |
+| **Type hints**           | No                               | Throughout                                  |
 
 ---
 
@@ -64,42 +64,42 @@ The terminal menu appears. Press `1` for the original build or `2` for the advan
 
 ### Title screen
 
-| Key | Action |
-|-----|--------|
+| Key | Action                                                              |
+| --- | ------------------------------------------------------------------- |
 | `A` | Start game — **auto-serve** (next round begins after a short pause) |
-| `M` | Start game — **manual serve** (`Space` launches each ball) |
-| `Q` | Quit — closes the window and returns to the terminal menu |
+| `M` | Start game — **manual serve** (`Space` launches each ball)          |
+| `Q` | Quit — closes the window and returns to the terminal menu           |
 
 ### During gameplay
 
-| Action | Left player | Right player |
-|--------|-------------|--------------|
-| Move paddle up | `W` | `↑` |
-| Move paddle down | `S` | `↓` |
-| Pause | `Space` | `Space` |
+| Action           | Left player | Right player |
+| ---------------- | ----------- | ------------ |
+| Move paddle up   | `W`         | `↑`          |
+| Move paddle down | `S`         | `↓`          |
+| Pause            | `Space`     | `Space`      |
 
 ### Pause overlay
 
-| Key | Action |
-|-----|--------|
-| `Space` | Resume game |
-| `R` | Return to title screen |
+| Key     | Action                 |
+| ------- | ---------------------- |
+| `Space` | Resume game            |
+| `R`     | Return to title screen |
 
 ### Game over overlay
 
-| Key | Action |
-|-----|--------|
+| Key     | Action                                           |
+| ------- | ------------------------------------------------ |
 | `Space` | Play again — resets scores, returns to live game |
-| `R` | Return to title screen |
+| `R`     | Return to title screen                           |
 
 ### Manual-serve prompt
 
 Appears after each point in manual-serve mode.
 
-| Key | Action |
-|-----|--------|
+| Key     | Action                    |
+| ------- | ------------------------- |
 | `Space` | Serve — launches the ball |
-| `R` | Return to title screen |
+| `R`     | Return to title screen    |
 
 ---
 
@@ -119,6 +119,7 @@ Appears after each point in manual-serve mode.
 ## Features
 
 ### Both builds
+
 - Two-player local multiplayer
 - Smooth paddle movement using `onkeypress` / `onkeyrelease` (hold the key, paddle keeps moving)
 - Ball speed increases 5 % per paddle hit — rally intensity escalates naturally
@@ -137,6 +138,7 @@ Press `Space` during gameplay to freeze the ball and paddles instantly. The PAUS
 
 **Serve mode selection**
 At the title screen, choose how each new point starts:
+
 - **Auto** — after a 1-second pause the ball relaunches automatically.
 - **Manual** — after a point the game freezes and waits for `Space` to serve. Useful if players need a moment to reposition. `R` is also available here.
 
@@ -172,11 +174,11 @@ Each box is a screen state. Arrows show which key causes the transition.
 
 ```
                     ┌─────────────────────────────┐
-                    │         TITLE SCREEN         │
-                    │                              │
-                    │  [A] auto-serve              │
-                    │  [M] manual serve            │
-                    │  [Q] quit                    │
+                    │         TITLE SCREEN        │
+                    │                             │
+                    │  [A] auto-serve             │
+                    │  [M] manual serve           │
+                    │  [Q] quit                   │
                     └─────────────────────────────┘
                          │           │         │
                         [A]         [M]       [Q]
@@ -191,7 +193,7 @@ Each box is a screen state. Arrows show which key causes the transition.
                          │           │
               ┌──────────┘           ▼
               │                ┌──────────────┐
-              │                │    PAUSED     │
+              │                │    PAUSED    │
               │                │              │
               │                │ [SPACE] ──► resume (back to game loop)
               │                │ [R]     ──► title screen
@@ -200,8 +202,8 @@ Each box is a screen state. Arrows show which key causes the transition.
               ├── auto mode  ──► 1 sec pause ──► back to game loop
               │
               └── manual mode ──► ┌───────────────────┐
-                                  │   SERVE PROMPT     │
-                                  │                    │
+                                  │   SERVE PROMPT    │
+                                  │                   │
                                   │ [SPACE] ──► serve (back to game loop)
                                   │ [R]     ──► title screen
                                   └───────────────────┘
@@ -210,8 +212,8 @@ Each box is a screen state. Arrows show which key causes the transition.
               │
               ▼
          ┌─────────────────────┐
-         │      GAME OVER       │
-         │                      │
+         │      GAME OVER      │
+         │                     │
          │ [SPACE] ──► play again (scores reset, back to game loop)
          │ [R]     ──► title screen
          └─────────────────────┘
@@ -255,48 +257,55 @@ pong-game-python-tkinter/
 ## Module reference — advanced
 
 ### `config.py`
+
 Single source of truth for every numeric and string constant. No magic numbers anywhere else in the codebase. Changing a value here propagates everywhere automatically.
 
 ### `ball.py` — `class Ball`
+
 Pure Python dataclass-style object. Tracks `x`, `y`, `x_move`, `y_move`, and `move_speed`. Exposes movement methods and collision predicates. **Zero imports from `turtle`, `tkinter`, or `display`.**
 
-| Method | Description |
-|--------|-------------|
-| `move()` | Advances position by current velocity vector |
-| `bounce_x()` / `bounce_y()` | Inverts the corresponding velocity component |
-| `increase_speed()` | Multiplies `move_speed` by `BALL_SPEED_FACTOR` (< 1 = faster loop delay) |
-| `reset_position()` | Returns to centre, resets speed, flips x direction |
-| `hits_wall()` | True when `y` exceeds `±WALL_BOUNDARY_Y` |
-| `hits_right_paddle(y)` | True when ball is in the right paddle's hit zone and moving right |
-| `hits_left_paddle(y)` | True when ball is in the left paddle's hit zone and moving left |
-| `out_right()` / `out_left()` | True when ball has fully passed a paddle (`±BALL_OUT_X`) |
+| Method                       | Description                                                              |
+| ---------------------------- | ------------------------------------------------------------------------ |
+| `move()`                     | Advances position by current velocity vector                             |
+| `bounce_x()` / `bounce_y()`  | Inverts the corresponding velocity component                             |
+| `increase_speed()`           | Multiplies `move_speed` by `BALL_SPEED_FACTOR` (< 1 = faster loop delay) |
+| `reset_position()`           | Returns to centre, resets speed, flips x direction                       |
+| `hits_wall()`                | True when `y` exceeds `±WALL_BOUNDARY_Y`                                 |
+| `hits_right_paddle(y)`       | True when ball is in the right paddle's hit zone and moving right        |
+| `hits_left_paddle(y)`        | True when ball is in the left paddle's hit zone and moving left          |
+| `out_right()` / `out_left()` | True when ball has fully passed a paddle (`±BALL_OUT_X`)                 |
 
 ### `paddle.py` — `class Paddle`, `LeftPaddle`, `RightPaddle`
+
 Pure logic. Tracks `x` (fixed) and `y` (mutable). Clamps movement to `PADDLE_BOUNDARY_TOP` / `PADDLE_BOUNDARY_BOTTOM`. `LeftPaddle` and `RightPaddle` are thin subclasses that set the correct starting `x`.
 
 ### `scores.py` — `class ScoreTracker`
+
 Tracks `left` and `right` integer counters. Exposes a `score` property returning `tuple[int, int]`. `is_game_over()` checks against `WIN_SCORE`. `reset()` zeroes both counters.
 
 ### `display.py` — `class Display`
+
 Owns all four turtle objects (`_paddle_a`, `_paddle_b`, `_ball`, `_writer`) and the `Screen`. The game loop calls `render_*` methods every tick; `main.py` never touches a turtle directly.
 
-| Method | Description |
-|--------|-------------|
-| `render_ball(x, y)` | Moves ball turtle to given coordinates |
-| `render_paddle(side, x, y)` | Moves the named paddle turtle |
-| `render_score(score)` | Clears writer, redraws both scores in the HUD strip |
-| `show_welcome()` | Animated title screen; returns `"auto"`, `"manual"`, or `None` (quit) |
-| `show_pause()` | Pause overlay; returns `True` (resume) or `False` (return to title) |
-| `show_game_over()` | Game-over overlay; returns `True` (play again) or `False` (return to title) |
-| `wait_for_serve()` | Manual-serve prompt; returns `True` (serve) or `False` (return to title) |
-| `close()` | Calls `sys.exit(0)` — clean subprocess termination |
+| Method                      | Description                                                                 |
+| --------------------------- | --------------------------------------------------------------------------- |
+| `render_ball(x, y)`         | Moves ball turtle to given coordinates                                      |
+| `render_paddle(side, x, y)` | Moves the named paddle turtle                                               |
+| `render_score(score)`       | Clears writer, redraws both scores in the HUD strip                         |
+| `show_welcome()`            | Animated title screen; returns `"auto"`, `"manual"`, or `None` (quit)       |
+| `show_pause()`              | Pause overlay; returns `True` (resume) or `False` (return to title)         |
+| `show_game_over()`          | Game-over overlay; returns `True` (play again) or `False` (return to title) |
+| `wait_for_serve()`          | Manual-serve prompt; returns `True` (serve) or `False` (return to title)    |
+| `close()`                   | Calls `sys.exit(0)` — clean subprocess termination                          |
 
 All overlays use `onkeypress` bindings consistently. Before entering any overlay, the caller unregisters the gameplay Space binding so it cannot double-fire. After the overlay returns, Space is re-registered for pause.
 
 ### `main.py`
+
 Contains `GameState` (wraps `Ball`, `LeftPaddle`, `RightPaddle` with a `reset()` method) and `main()`.
 
 `main()` runs two nested loops:
+
 - **Outer loop** — calls `show_welcome()`, then enters the game loop. When the game loop `break`s (on any `R` press), the outer loop resets state and reruns the title screen in the same window.
 - **Inner loop** — the live game loop. Runs at `ball.move_speed` cadence. Checks pause flag → runs physics → renders → checks scoring → handles overlays.
 
@@ -306,30 +315,30 @@ Contains `GameState` (wraps `Ball`, `LeftPaddle`, `RightPaddle` with a `reset()`
 
 All values live in `advanced/config.py`.
 
-| Constant | Default | Description |
-|----------|---------|-------------|
-| `SCREEN_WIDTH` | `800` | Window width in pixels |
-| `SCREEN_HEIGHT` | `760` | Window height — court (600) + score strip (80) + bottom padding (80) |
-| `SCORE_DIVIDER_Y` | `285` | Y-coordinate of the top court boundary line |
-| `SCORE_Y` | `318` | Y-coordinate of the score numerals in the HUD strip |
-| `SCORE_FONT_SIZE` | `40` | Font size for HUD score numbers |
-| `PADDLE_SPEED` | `20` | Pixels the paddle moves per key-held tick |
-| `PADDLE_BOUNDARY_TOP` | `245` | Maximum Y the paddle centre can reach |
-| `PADDLE_BOUNDARY_BOTTOM` | `−240` | Minimum Y the paddle centre can reach |
-| `LEFT_PADDLE_X` | `−350` | Fixed X position of the left paddle |
-| `RIGHT_PADDLE_X` | `350` | Fixed X position of the right paddle |
-| `PADDLE_HALF_HEIGHT` | `50` | Half the paddle's pixel height — used in collision maths |
-| `BALL_INITIAL_SPEED` | `0.025` | Starting `time.sleep` delay (seconds) per game tick |
-| `BALL_X_MOVE` | `10` | Horizontal pixels per tick |
-| `BALL_Y_MOVE` | `10` | Vertical pixels per tick |
-| `BALL_SPEED_FACTOR` | `0.95` | `move_speed` multiplier per paddle hit (< 1 = shorter sleep = faster) |
-| `WALL_BOUNDARY_Y` | `275` | Y-coordinate at which the ball bounces vertically |
-| `PADDLE_HIT_INNER` | `320` | Inner edge of the paddle collision zone |
-| `PADDLE_HIT_OUTER` | `350` | Outer edge (paddle face) of the collision zone |
-| `BALL_OUT_X` | `380` | X-coordinate at which a point is awarded |
-| `WIN_SCORE` | `10` | Points needed to win a match |
-| `WELCOME_LINE_DELAY` | `0.25` | Seconds between each line appearing on the title screen |
-| `POINT_PAUSE` | `1.0` | Seconds the game pauses after a point in auto-serve mode |
+| Constant                 | Default | Description                                                           |
+| ------------------------ | ------- | --------------------------------------------------------------------- |
+| `SCREEN_WIDTH`           | `800`   | Window width in pixels                                                |
+| `SCREEN_HEIGHT`          | `760`   | Window height — court (600) + score strip (80) + bottom padding (80)  |
+| `SCORE_DIVIDER_Y`        | `285`   | Y-coordinate of the top court boundary line                           |
+| `SCORE_Y`                | `318`   | Y-coordinate of the score numerals in the HUD strip                   |
+| `SCORE_FONT_SIZE`        | `40`    | Font size for HUD score numbers                                       |
+| `PADDLE_SPEED`           | `20`    | Pixels the paddle moves per key-held tick                             |
+| `PADDLE_BOUNDARY_TOP`    | `245`   | Maximum Y the paddle centre can reach                                 |
+| `PADDLE_BOUNDARY_BOTTOM` | `−240`  | Minimum Y the paddle centre can reach                                 |
+| `LEFT_PADDLE_X`          | `−350`  | Fixed X position of the left paddle                                   |
+| `RIGHT_PADDLE_X`         | `350`   | Fixed X position of the right paddle                                  |
+| `PADDLE_HALF_HEIGHT`     | `50`    | Half the paddle's pixel height — used in collision maths              |
+| `BALL_INITIAL_SPEED`     | `0.025` | Starting `time.sleep` delay (seconds) per game tick                   |
+| `BALL_X_MOVE`            | `10`    | Horizontal pixels per tick                                            |
+| `BALL_Y_MOVE`            | `10`    | Vertical pixels per tick                                              |
+| `BALL_SPEED_FACTOR`      | `0.95`  | `move_speed` multiplier per paddle hit (< 1 = shorter sleep = faster) |
+| `WALL_BOUNDARY_Y`        | `275`   | Y-coordinate at which the ball bounces vertically                     |
+| `PADDLE_HIT_INNER`       | `320`   | Inner edge of the paddle collision zone                               |
+| `PADDLE_HIT_OUTER`       | `350`   | Outer edge (paddle face) of the collision zone                        |
+| `BALL_OUT_X`             | `380`   | X-coordinate at which a point is awarded                              |
+| `WIN_SCORE`              | `10`    | Points needed to win a match                                          |
+| `WELCOME_LINE_DELAY`     | `0.25`  | Seconds between each line appearing on the title screen               |
+| `POINT_PAUSE`            | `1.0`   | Seconds the game pauses after a point in auto-serve mode              |
 
 ---
 
@@ -338,16 +347,16 @@ All values live in `advanced/config.py`.
 ```
  y = +380 ┌──────────────────────────────────────────────┐
           │                                              │
-          │               3            7                │  ← score HUD
+          │               3            7                 │  ← score HUD
           │                                              │
  y = +285 ├──────────────────────────────────────────────┤  ← SCORE_DIVIDER_Y (top line)
-          │               ║                              │
-          │               ║                              │
-          │  ██           ║                              │
-          │  ██     ·     ║           ██                 │  ← live court
-          │  ██           ║                              │
-          │               ║                              │
-          │               ║  (dashed centre line)        │
+          │                    ║                      ██ │
+          │                    ║                      ██ │
+          │  ██                ║                      ██ │
+          │  ██     ·          ║                         │  ← live court
+          │  ██                ║                         │
+          │                    ║                         │
+          │                    ║  (dashed centre line)   │
  y = −285 ├──────────────────────────────────────────────┤  ← bottom line
           │                                              │
  y = −380 └──────────────────────────────────────────────┘
@@ -398,14 +407,14 @@ See [docs/COURSE_NOTES.md](docs/COURSE_NOTES.md) for the original exercise brief
 
 Standard library only — no `pip install` required.
 
-| Module | Used for |
-|--------|----------|
-| `turtle` | All graphics rendering |
-| `tkinter` | Underlying GUI (bundled with `turtle`) |
-| `time` | `sleep()` for game tick cadence and delays |
-| `sys` | `sys.exit(0)` for clean subprocess termination |
-| `os` | `os.system("clear")` in terminal menu |
-| `subprocess` | Launching game builds from `menu.py` |
-| `pathlib` | `Path(__file__).parent` for portable file paths |
+| Module       | Used for                                        |
+| ------------ | ----------------------------------------------- |
+| `turtle`     | All graphics rendering                          |
+| `tkinter`    | Underlying GUI (bundled with `turtle`)          |
+| `time`       | `sleep()` for game tick cadence and delays      |
+| `sys`        | `sys.exit(0)` for clean subprocess termination  |
+| `os`         | `os.system("clear")` in terminal menu           |
+| `subprocess` | Launching game builds from `menu.py`            |
+| `pathlib`    | `Path(__file__).parent` for portable file paths |
 
 Python 3.10+ recommended. `turtle` and `tkinter` ship with CPython on macOS, Windows, and most Linux distributions.
