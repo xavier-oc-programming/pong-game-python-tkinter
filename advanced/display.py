@@ -60,14 +60,15 @@ class Display:
         return t
 
     def _draw_score_divider(self) -> None:
-        """Horizontal line separating the score strip from the court."""
-        div = Turtle()
-        div.hideturtle()
-        div.penup()
-        div.color("white")
-        div.goto(-SCREEN_WIDTH // 2, SCORE_DIVIDER_Y)
-        div.pendown()
-        div.goto(SCREEN_WIDTH // 2, SCORE_DIVIDER_Y)
+        """Horizontal lines at the top and bottom edges of the court."""
+        for y in (SCORE_DIVIDER_Y, -SCORE_DIVIDER_Y):
+            line = Turtle()
+            line.hideturtle()
+            line.penup()
+            line.color("white")
+            line.goto(-SCREEN_WIDTH // 2, y)
+            line.pendown()
+            line.goto(SCREEN_WIDTH // 2, y)
 
     def _draw_center_line(self) -> None:
         """Vertical dashed line down the centre of the court only."""
