@@ -153,31 +153,71 @@ Pressing `R` from pause, game over, or the serve prompt always returns to the ti
 
 ## Navigation flow
 
+### Terminal menu
+
 ```
-python menu.py  (terminal)
-        │
-        ├─ 1 ──► original/main.py ──► window closes ──┐
-        ├─ 2 ──► advanced/main.py                      │
-        │              │                               │
-        │              ▼                               │
-        │        ┌─ Title screen ◄────────────────┐   │
-        │        │  [ A ] auto                    │   │
-        │        │  [ M ] manual      R (any      │   │
-        │        │  [ Q ] quit ──► sys.exit ──────┼───┘
-        │        │         │                  overlay)│
-        │        │         ▼                      │   │
-        │        │    Game loop ──► Pause ─────── ┤   │
-        │        │         │        Space=resume  │   │
-        │        │         │                      │   │
-        │        │         ├──► Serve prompt ──── ┤   │
-        │        │         │     Space=serve      │   │
-        │        │         │                      │   │
-        │        │         └──► Game over ─────── ┘   │
-        │        │               Space=play again      │
-        │        └────────────────────────────────────-┘
-        │
-        └─ q ──► exit launcher
+python menu.py
+  │
+  ├── [1] ─────────────────────────────────► original/main.py
+  │                                               (window closes when done)
+  │
+  ├── [2] ─────────────────────────────────► advanced/main.py  (see below)
+  │
+  └── [q] ─────────────────────────────────► exit
 ```
+
+### Advanced build — in-window flow
+
+Each box is a screen state. Arrows show which key causes the transition.
+
+```
+                    ┌─────────────────────────────┐
+                    │         TITLE SCREEN         │
+                    │                              │
+                    │  [A] auto-serve              │
+                    │  [M] manual serve            │
+                    │  [Q] quit                    │
+                    └─────────────────────────────┘
+                         │           │         │
+                        [A]         [M]       [Q]
+                         │           │         │
+                         ▼           ▼         ▼
+                    ┌─────────────────────┐   exit
+                    │      GAME LOOP       │
+                    │   (ball in play)     │
+                    └─────────────────────┘
+                         │           │
+                  point scored    [SPACE]
+                         │           │
+              ┌──────────┘           ▼
+              │                ┌──────────────┐
+              │                │    PAUSED     │
+              │                │              │
+              │                │ [SPACE] ──► resume (back to game loop)
+              │                │ [R]     ──► title screen
+              │                └──────────────┘
+              │
+              ├── auto mode  ──► 1 sec pause ──► back to game loop
+              │
+              └── manual mode ──► ┌───────────────────┐
+                                  │   SERVE PROMPT     │
+                                  │                    │
+                                  │ [SPACE] ──► serve (back to game loop)
+                                  │ [R]     ──► title screen
+                                  └───────────────────┘
+              │
+        (after 10 points)
+              │
+              ▼
+         ┌─────────────────────┐
+         │      GAME OVER       │
+         │                      │
+         │ [SPACE] ──► play again (scores reset, back to game loop)
+         │ [R]     ──► title screen
+         └─────────────────────┘
+```
+
+> `[R]` from any overlay always returns to the **Title screen** in the same window — the window never closes mid-session.
 
 ---
 
